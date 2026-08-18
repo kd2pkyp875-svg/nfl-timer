@@ -1,0 +1,32 @@
+name: Send NFL Team Every 10 Minutes
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # Tells GitHub to run this every 10 minutes
+  workflow_dispatch: # Allows you to also trigger it manually with a button
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run the script
+        run: python send_team.py
+
+      - name: Save changes to the team list
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add teams.txt
+          git diff-index --quiet HEAD || git commit -m "Remove sent team from list"
+          git push
