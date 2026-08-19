@@ -33,15 +33,23 @@ def main():
         # Instantly save the shorter list back to the file
         save_teams(teams)
         
+        # CHOOSE THE MESSAGE TYPE:
+        # If this is the absolute last team (0 remaining in the list), send the custom congrats message!
+        if len(teams) == 0:
+            message = f"🎉 **CONGRATS!!! Chan and Kameron for the 26/27 season you are diehard fans for the {selected_team}!!! Best of luck on the season!!!** 🎉"
+        else:
+            # Standard message for all previous teams
+            message = f"🏈 Your 26/27 NFL team is NOT: **{selected_team}** ({len(teams)} teams remaining)"
+        
         # Send the message to Discord
-        message = f"🏈 Your 26/27 NFL team is NOT: **{selected_team}** ({len(teams)} teams remaining)"
         requests.post(WEBHOOK_URL, json={"content": message})
         
         # If there are still teams left, pause the script for exactly 10 minutes
         if teams:
             time.sleep(600)  # 600 seconds = 10 minutes
 
-    requests.post(WEBHOOK_URL, json={"content": "🎉 All 32 NFL teams have been sent!"})
+    # Optional final confirmation message once the loop fully exits
+    requests.post(WEBHOOK_URL, json={"content": "🏁 The 32-team selection loop has finished successfully."})
 
 if __name__ == "__main__":
     main()
