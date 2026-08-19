@@ -86,7 +86,7 @@ def main():
             requests.post(WEBHOOK_URL, json=payload)
         else:
             # New elimination text message format with full team names
-            message = f"🏈 Your {short_season} NFL Team is NOT❌: **{selected_team}**"
+            message = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **{selected_team}**"
             requests.post(WEBHOOK_URL, json={"content": message})
         
         if teams:
