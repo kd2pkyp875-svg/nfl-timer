@@ -5,8 +5,7 @@ import time
 from datetime import datetime
 
 # Paste your actual Discord URL between the quote marks below
-WEBHOOK_URL = "https://discord.com/api/webhooks/1539384525753290895/Lb7_JskAPwL-T3X1635SoUnYMoB5Cv0vDknFuXC8MCBm8GgrYn49eGnFpNHD4eeS3JB4
-"
+WEBHOOK_URL = "https://discord.com/api/webhooks/1539384525753290895/Lb7_JskAPwL-T3X1635SoUnYMoB5Cv0vDknFuXC8MCBm8GgrYn49eGnFpNHD4eeS3JB4"
 FILE_NAME = "teams.txt"
 
 # Complete master list updated with full city and team names
