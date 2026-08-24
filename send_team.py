@@ -89,14 +89,14 @@ def main():
                 "embeds": [
                     {
                         "title": f"🏆 {full_season} THIS YEARS ASSIGNED NFL TEAM",
-                        "description": f"🎉 **CONGRATS!!! Chan and Kameron for the {short_season} season you are diehard fans for... 👉 Tap to reveal!** \n" + ("‎\n" * 10) + f"🎉 **You got the {selected_team}!!!** 🎉",
-                        "color": 13413120,
-                        "fields": [
-                            {
-                                "name": "Your Assigned Franchise",
-                                "value": f"🏈 **{selected_team}**",
-                                "inline": False
-                            },
+                        "description": f"🎉 **CONGRATS!!! Chan and Kameron for the {short_season} season you are diehard fans for the ||{selected_team}||!!!** 🎉",
+"color": 13413120,
+"fields": [
+    {
+        "name": "Your Assigned Franchise",
+        "value": f"🏈 **||{selected_team}||**",
+        "inline": False
+    },
                             {
                                 "name": "Message",
                                 "value": "Best of luck on the upcoming season! May you hit the over.",
@@ -117,7 +117,9 @@ def main():
         else:
             # Elimination format tracking full team names
             # Hidden spacing forces phone alerts to hide the team until clicked
-            message = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **👉 Tap to reveal team!** \n" + ("‎\n" * 10) + f"**{selected_team}**"
+            # Elimination format tracking full team names
+            message = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **||{selected_team}||**"
+
 
             res = requests.post(post_url, json={"content": message})
             
