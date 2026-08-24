@@ -89,7 +89,7 @@ def main():
                 "embeds": [
                     {
                         "title": f"🏆 {full_season} THIS YEARS ASSIGNED NFL TEAM",
-                        "description": f"🎉 **CONGRATS!!! Chan and Kameron for the {short_season} season you are diehard fans for the {selected_team}!!!** 🎉",
+                        "description": f"🎉 **CONGRATS!!! Chan and Kameron for the {short_season} season you are diehard fans for... 👉 Tap to reveal!** \n" + ("‎\n" * 10) + f"🎉 **You got the {selected_team}!!!** 🎉",
                         "color": 13413120,
                         "fields": [
                             {
@@ -116,7 +116,9 @@ def main():
                 os.remove(ID_FILE)
         else:
             # Elimination format tracking full team names
-            message = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **{selected_team}**"
+            # Hidden spacing forces phone alerts to hide the team until clicked
+            message = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **👉 Tap to reveal team!** \n" + ("‎\n" * 10) + f"**{selected_team}**"
+
             res = requests.post(post_url, json={"content": message})
             
             # Save the new message ID to use for deletion in the next loop
