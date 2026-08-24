@@ -52,7 +52,7 @@ def delete_previous_message():
 
 def save_message_id(response):
     """Saves the unique Discord ID of the newly sent message"""
-    if response.status_code in:
+    if response.status_code == 200:
         try:
             msg_id = response.json().get("id")
             with open(ID_FILE, "w") as f:
@@ -127,7 +127,7 @@ def main():
 
     # AUTOMATIC RESET: Restore all 32 full teams to the file for the next draft
     save_teams(MASTER_TEAMS)
-    requests.post(WEBHOOK_URL, json={"content": "🏁 The 32-team loop is done! The team list has automatically reset for your next draft."})
+    requests.post(post_url, json={"content": "🏁 The 32-team loop is done! The team list has automatically reset for your next draft."})
 
 if __name__ == "__main__":
     main()
