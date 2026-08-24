@@ -7,6 +7,7 @@ from datetime import datetime
 # Paste your actual Discord URL between the quote marks below
 WEBHOOK_URL = "https://discord.com/api/webhooks/1539384525753290895/Lb7_JskAPwL-T3X1635SoUnYMoB5Cv0vDknFuXC8MCBm8GgrYn49eGnFpNHD4eeS3JB4"
 FILE_NAME = "teams.txt"
+ID_FILE = "last_msg.txt"
 
 # Complete master list updated with full city and team names
 MASTER_TEAMS = [
@@ -40,6 +41,25 @@ def save_teams(teams_list):
         for team in teams_list:
             f.write(f"{team}\n")
 
+def delete_previous_message():
+    """Finds and deletes the message sent in the last 10-minute interval"""
+    if os.path.exists(ID_FILE):
+        with open(ID_FILE, "r") as f:
+            msg_id = f.read().strip()
+        if msg_id:
+            delete_url = f"{WEBHOOK_URL}/messages/{msg_id}"
+            requests.delete(delete_url)
+
+def save_message_id(response):
+    """Saves the unique Discord ID of the newly sent message"""
+    if response.status_code in:
+        try:
+            msg_id = response.json().get("id")
+            with open(ID_FILE, "w") as f:
+                f.write(str(msg_id))
+        except Exception:
+            pass
+
 def main():
     teams = load_teams()
     
@@ -55,6 +75,12 @@ def main():
         selected_team = random.choice(teams)
         teams.remove(selected_team)
         save_teams(teams)
+        
+        # 1. Delete the previous message from 10 minutes ago
+        delete_previous_message()
+        
+        # 2. Append '?wait=true' to the URL so Discord sends back the message tracking details
+        post_url = f"{WEBHOOK_URL}?wait=true"
         
         # CHOOSE THE MESSAGE TYPE:
         if len(teams) == 0:
@@ -83,11 +109,18 @@ def main():
                     }
                 ]
             }
-            requests.post(WEBHOOK_URL, json=payload)
+            requests.post(post_url, json=payload)
+            
+            # Clear out the ID tracking file since the draft is done
+            if os.path.exists(ID_FILE):
+                os.remove(ID_FILE)
         else:
-            # New elimination text message format with full team names
+            # Elimination format tracking full team names
             message = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **{selected_team}**"
-            requests.post(WEBHOOK_URL, json={"content": message})
+            res = requests.post(post_url, json={"content": message})
+            
+            # Save the new message ID to use for deletion in the next loop
+            save_message_id(res)
         
         if teams:
             time.sleep(600)  # 10 minutes
