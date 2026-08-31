@@ -94,7 +94,7 @@ def main():
         welcome_res = requests.post(post_url, json={"content": welcome_message})
         
         # Save welcome message ID so it gets wiped clean when the first elimination drops
-        save_message_id(welcome_res)
+        # save_message_id(welcome_res)
         
         # Wait exactly 10 minutes before starting the elimination loop
         time.sleep(600)
