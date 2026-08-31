@@ -103,9 +103,6 @@ def main():
                                 "inline": False
                             }
                         ],
-                        "footer": {
-                            "text": " "
-                        }
                     }
                 ]
             }
@@ -131,7 +128,6 @@ def main():
 
     # AUTOMATIC RESET: Restore all 32 full teams to the file for the next draft
     save_teams(MASTER_TEAMS)
-    requests.post(post_url, json={"content": "🏁 The 32-team loop is done! The team list has automatically reset for your next draft."})
 
 if __name__ == "__main__":
     main()
