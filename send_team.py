@@ -30,6 +30,13 @@ def get_season_strings():
     short_season = f"{str(current_year)[2:]}/{str(next_year)[2:]}"
     return full_season, short_season
 
+def get_wager_amount():
+    """Calculates $25 for 2026, $50 for 2027, $75 for 2028, etc."""
+    current_year = datetime.now().year
+    base_year = 2025
+    multiplier = current_year - base_year
+    return multiplier * 25
+
 def load_teams():
     if not os.path.exists(FILE_NAME):
         return []
@@ -63,6 +70,9 @@ def save_message_id(response):
 def main():
     teams = load_teams()
     
+    # Check if this is a fresh start (all 32 teams are present)
+    is_fresh_start = len(teams) == 0 or len(teams) == len(MASTER_TEAMS)
+    
     # If the file happens to be empty at startup, automatically fill it with full names
     if not teams:
         teams = MASTER_TEAMS.copy()
@@ -70,6 +80,24 @@ def main():
 
     # Get the automatic year formatting (e.g., '2026/2027' and '26/27')
     full_season, short_season = get_season_strings()
+    wager_amount = get_wager_amount()
+
+    # 📢 Welcome announcement step: Only triggers at the very beginning of a fresh draft list
+    if is_fresh_start:
+        welcome_message = (
+            f"📢 **Welcome to the annual NFL assignment!** This year you and your fellow fans "
+            f"will be wagering **${wager_amount}** each to hit the predicted OVER TOTAL regular season "
+            f"wins for your assigned team (line set by DraftKings). "
+            f"The team elimination process will begin in 10 minutes. Best of luck! 🏈"
+        )
+        post_url = f"{WEBHOOK_URL}?wait=true"
+        welcome_res = requests.post(post_url, json={"content": welcome_message})
+        
+        # Save welcome message ID so it gets wiped clean when the first elimination drops
+        save_message_id(welcome_res)
+        
+        # Wait exactly 10 minutes before starting the elimination loop
+        time.sleep(600)
 
     while teams:
         selected_team = random.choice(teams)
@@ -84,19 +112,19 @@ def main():
         
         # CHOOSE THE MESSAGE TYPE:
         if len(teams) == 0:
-            # Final winner announcement block
+            # Final winner announcement block (incorporates the notification preview defense)
             payload = {
                 "embeds": [
                     {
                         "title": f"🏆 {full_season} THIS YEARS ASSIGNED NFL TEAM",
-                        "description": f"🎉 **CONGRATS!!! For the {short_season} season you are diehard fans for the ||{selected_team}||!!!** 🎉",
-"color": 13413120,
-"fields": [
-    {
-        "name": "Your Assigned Franchise",
-        "value": f"🏈 **||{selected_team}||**",
-        "inline": False
-    },
+                        "description": f"🎉 **CONGRATS!!! For the {short_season} season you are diehard fans for... 👉 Tap to reveal!** \n" + ("‎\n" * 10) + f"🎉 **You are fans of the ||{selected_team}||!!!** 🎉",
+                        "color": 13413120,
+                        "fields": [
+                            {
+                                "name": "Your Assigned Franchise",
+                                "value": f"🏈 **||{selected_team}||**",
+                                "inline": False
+                            },
                             {
                                 "name": "Message",
                                 "value": "Best of luck on the upcoming season! May you hit the over.",
@@ -112,13 +140,10 @@ def main():
             if os.path.exists(ID_FILE):
                 os.remove(ID_FILE)
         else:
-            # Elimination format tracking full team names
-            # Hidden spacing forces phone alerts to hide the team until clicked
-            # Elimination format tracking full team names
-            message = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **||{selected_team}||**"
+            # Hidden spacing forces phone notification previews to hide the team name until clicked
+            final_msg_content = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **👉 Tap to reveal team!** \n" + ("‎\n" * 10) + f"**||{selected_team}||**"
 
-
-            res = requests.post(post_url, json={"content": message})
+            res = requests.post(post_url, json={"content": final_msg_content})
             
             # Save the new message ID to use for deletion in the next loop
             save_message_id(res)
