@@ -89,7 +89,7 @@ def main():
                 "embeds": [
                     {
                         "title": f"🏆 {full_season} THIS YEARS ASSIGNED NFL TEAM",
-                        "description": f"🎉 **CONGRATS!!! Chan and Kameron for the {short_season} season you are diehard fans for the ||{selected_team}||!!!** 🎉",
+                        "description": f"🎉 **CONGRATS!!! For the {short_season} season you are diehard fans for the ||{selected_team}||!!!** 🎉",
 "color": 13413120,
 "fields": [
     {
@@ -104,7 +104,7 @@ def main():
                             }
                         ],
                         "footer": {
-                            "text": "NFL Random Selection Loop Completed"
+                            "text": " "
                         }
                     }
                 ]
