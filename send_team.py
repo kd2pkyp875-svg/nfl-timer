@@ -141,7 +141,7 @@ def main():
                 os.remove(ID_FILE)
         else:
             # Hidden spacing forces phone notification previews to hide the team name until clicked
-            final_msg_content = f"🏈 Your {short_season} NFL Team is NOT ❌ the: **👉 Tap to reveal team!** \n" + ("‎\n" * 10) + f"**||{selected_team}||**"
+            final_msg_content = f"🏈 Your {short_season} NFL Team is NOT ❌ the......** \n" + ("‎\n" * 10) + f"**{selected_team}**"
 
             res = requests.post(post_url, json={"content": final_msg_content})
             
