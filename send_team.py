@@ -85,10 +85,10 @@ def main():
     # 📢 Welcome announcement step: Only triggers at the very beginning of a fresh draft list
     if is_fresh_start:
         welcome_message = (
-            f"📢 **Welcome to the annual NFL Survivor Draw!** This year you and your fellow fans "
+            f"📢 **Welcome to the Annual Diehards NFL Survivor Draw!** This year you and your temporary diehard fans "
             f"will be wagering **${wager_amount}** each to hit the predicted OVER TOTAL regular season "
-            f"wins for your assigned team (line set by DraftKings). "
-            f"The team elimination process will begin in 10 minutes. Best of luck! 🏈"
+            f"wins for your assigned team. "
+            f"The survivor draw will begin in 10 minutes. Best of luck! 🏈"
         )
         post_url = f"{WEBHOOK_URL}?wait=true"
         welcome_res = requests.post(post_url, json={"content": welcome_message})
